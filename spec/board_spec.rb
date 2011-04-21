@@ -62,6 +62,11 @@ describe Board do
     end
     @my_board.sum_of_left_diagonal.should == @my_board.dimension
     @my_board.sum_of_right_diagonal.should == @my_board.dimension
- end
+  end
+
+  it "should check for a full board" do
+    double_loop { |row, column| @my_board.set_value_at(row, column, 1) }
+    @my_board.full?.should == true
+  end
 end
 
