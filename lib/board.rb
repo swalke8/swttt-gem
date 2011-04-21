@@ -1,15 +1,14 @@
 class Board
 
-  attr_reader :row, :column, :game_board, :sum_of_row, :sum_of_column, :sum_of_left_diagonal, :sum_of_right_diagonal
+  attr_reader :dimension, :game_board, :sum_of_row, :sum_of_column, :sum_of_left_diagonal, :sum_of_right_diagonal
 
-  def initialize(row = 3, column = 3)
-    @row = row
-    @sum_of_row = Array.new(@row) {0}
-    @column = column
-    @sum_of_column = Array.new(@column) {0}
+  def initialize(dimension = 3)
+    @dimension = dimension
+    @sum_of_row = Array.new(@dimension) {0}
+    @sum_of_column = Array.new(@dimension) {0}
     @sum_of_left_diagonal = 0
     @sum_of_right_diagonal = 0
-    @game_board = Array.new(@row) {Array.new(@column) {0}}
+    @game_board = Array.new(@dimension) {Array.new(@dimension) {0}}
   end
 
   def is_position_open?(row, column)
@@ -21,6 +20,8 @@ class Board
     @game_board[row][column] = new_value
     @sum_of_row[row] += new_value
     @sum_of_column[column] += new_value
+    @sum_of_left_diagonal += new_value if row == column
+    @sum_of_right_diagonal += new_value if @dimension - row - 1 == column
   end
 
 end
