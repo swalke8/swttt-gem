@@ -68,5 +68,16 @@ describe Board do
     double_loop { |row, column| @my_board.set_value_at(row, column, 1) }
     @my_board.full?.should == true
   end
+
+  it "should be able to undo a move if the set value is 0" do
+    double_loop { |row, column| @my_board.set_value_at(row, column, 1) }
+    @my_board.full?.should == true
+    @my_board.set_value_at(1,1,0)
+    @my_board.full?.should == false
+    @my_board.sum_of_row[1].should == 2
+    @my_board.sum_of_column[1].should == 2
+    @my_board.sum_of_left_diagonal.should == 2
+    @my_board.sum_of_right_diagonal.should == 2
+  end
 end
 

@@ -18,9 +18,9 @@ class Board
   end
 
   def set_value_at(row, column, new_value)
-    @game_board[row][column] = new_value
     update_sums(row, column, new_value)
     update_number_of_moves(new_value)
+    @game_board[row][column] = new_value
   end
 
   def full?
