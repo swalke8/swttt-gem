@@ -7,77 +7,123 @@ describe Board do
   end
 
   def double_loop
-    single_loop do |row|
-      single_loop { |column| yield(row, column) }
+    (0...@my_board.dimension).each do |row|
+      (0...@my_board.dimension).each do |column| 
+        yield(row, column)
+      end
     end
   end
-
-  def single_loop
-    (0...@my_board.dimension).each do |value|
-      yield(value)
-    end
-  end
-
-  ###############################################
 
   it "should create a board" do
     @my_board.nil?.should == false
   end
 
-  it "should initialize an empty board" do
-    double_loop { |row, column| @my_board.game_board[row][column].should == 0 }
-  end
-
-  it "should check to see if a position is open" do
-    double_loop { |row, column| @my_board.is_position_open?(row, column).should == true }
-  end
-
-  it "should be able to set a position's value" do
-    @my_board.set_value_at(1,1,-1)
-    @my_board.game_board[1][1].should == -1
-  end
-
-  it "should return the sum of a row" do
-    single_loop do |value|
-      @my_board.sum_of_row[1].should == value
-      @my_board.set_value_at(1, value, 1)
-    end
-    @my_board.sum_of_row[1].should == @my_board.dimension
-  end
-
-  it "should return the sum of a column" do
-    single_loop do |value|
-      @my_board.sum_of_column[0].should == value
-      @my_board.set_value_at(value,0,1)
-    end
-    @my_board.sum_of_column[0].should == @my_board.dimension
-  end
-
-  it "should return the sum of a diagonal" do
-    single_loop do |value|
-      @my_board.sum_of_left_diagonal.should == value
-      @my_board.sum_of_right_diagonal.should == value
-      @my_board.set_value_at(value,value,1)
-      @my_board.set_value_at(value, @my_board.dimension-value-1, 1) if value != (@my_board.dimension/2).ceil
-    end
-    @my_board.sum_of_left_diagonal.should == @my_board.dimension
-    @my_board.sum_of_right_diagonal.should == @my_board.dimension
-  end
-
   it "should check for a full board" do
-    double_loop { |row, column| @my_board.set_value_at(row, column, 1) }
+    double_loop { |row, column| @my_board.move(row, column) }
     @my_board.full?.should == true
   end
 
-  it "should be able to undo a move if the set value is 0" do
-    double_loop { |row, column| @my_board.set_value_at(row, column, 1) }
-    @my_board.full?.should == true
-    @my_board.set_value_at(1,1,0)
-    @my_board.full?.should == false
-    @my_board.sum_of_row[1].should == 2
-    @my_board.sum_of_column[1].should == 2
-    @my_board.sum_of_left_diagonal.should == 2
-    @my_board.sum_of_right_diagonal.should == 2
+  context "game history" do
+    it "is empty" do
+      @my_board.game_history == []
+    end
+
+    before do
+      @my_board.move(1,1)
+    end
+
+    it "has a move" do
+      @my_board.game_history.should == [Move.new(1,1)]
+    end
+
+    it "can recall last move" do
+      @my_board.game_history.last.should == Move.new(1,1)
+    end
+
+    it "can undo the last move" do
+      @my_board.move(1,2)
+      @my_board.game_history.last.should == Move.new(1,2,-1)
+      @my_board.undo_move
+      @my_board.game_history.should == [Move.new(1,1,1)]
+    end
+
+    it "decrements the number of moves" do
+      @my_board.undo_move
+      @my_board.number_of_moves_made.should == 0
+    end
+  end
+
+  it "has a player value" do
+    @my_board.player_value.should == 1
+  end
+
+  it "should update the player value with each move" do
+    @my_board.move(1,2)
+    @my_board.player_value.should == -1
+  end
+
+  it "should update the player value with each undo" do
+    @my_board.move(1,1)
+    @my_board.undo_move
+    @my_board.move(1,2)
+    @my_board.player_value.should == -1
+  end
+
+  it "can override the player_value" do
+    @my_board.move(1,2,1)
+    @my_board.move(0,0,1)
+    @my_board.player_value.should == 1
+  end
+
+  it "has a 3x3 board" do
+    @my_board.board.size.should == 3
+    @my_board.board[1].size.should == 3
+  end
+
+  it "updates the board when move is called" do
+    @my_board.move(0,0)
+    @my_board.board[0][0].should == 1
+  end
+
+  it "undos the board" do
+    @my_board.move(2,2)
+    @my_board.undo_move
+    @my_board.board[2][2].should == 0
+  end
+
+  context "sum values" do
+
+    before do
+      @my_board.move(1,1)
+    end
+
+    it "should update sum of row" do
+      @my_board.sum_of_row[1].should == 1
+    end
+
+    it "should update sum of column" do
+      @my_board.sum_of_column[1].should == 1
+    end
+
+    it "should update the diagonals" do
+      @my_board.left_diagonal.should == 1
+      @my_board.right_diagonal.should == 1
+    end
+
+    it "should undo sum of row" do
+      @my_board.undo_move
+      @my_board.sum_of_row[1].should == 0
+    end
+
+    it "should undo sum of column" do
+      @my_board.undo_move
+      @my_board.sum_of_column[1].should == 0
+    end
+
+    it "should undo diagonals" do
+      @my_board.undo_move
+      @my_board.left_diagonal.should == 0
+      @my_board.right_diagonal.should == 0
+    end
   end
 end
-
