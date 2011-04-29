@@ -11,11 +11,12 @@ class MinimaxComputer
   end
 
   def make_move(iteration = 0)
+    return make_first_move if first_move?
     if @observer.game_over?
-      return -@game_board.player_value if @observer.has_winner?
-      return 0
-    elsif first_move?
-      make_first_move
+      if !iteration.zero?
+        return -@game_board.player_value if @observer.has_winner?
+        return 0
+      end
     else
       perform_mini_max(iteration)
     end
@@ -24,36 +25,32 @@ class MinimaxComputer
 private
 
   def perform_mini_max(iteration)
-    best_value, best_moves = nil, []
-    (0...@game_board.dimension).each do |row|
-      (0...@game_board.dimension).each do |column|
-        path_value = 0
-        if @game_board.is_empty_at?(row, column)
-          @game_board.move(row, column)
-          path_value += make_move(iteration + 1)
-          break if @observer.game_over? && iteration.zero?
-          @game_board.undo_move
-          if better_move?(best_value, path_value)
-            best_moves.clear if path_value != best_value
-            best_value = path_value
-            best_moves << Move.new(row, column)
-          end
-        end
+    best_moves = BestMove.new(@game_board)
+    for_each_cell do |row, column|
+      path_value = 0
+      if @game_board.is_empty_at?(row, column)
+        path_value = path_score(row, column, iteration)
+        best_moves.add_better_move(best_moves.value, path_value, Move.new(row, column), @self_value)
       end
     end
-    return best_value if !iteration.zero?
-    move = best_moves[rand(best_moves.size)]
+    return best_moves.value if !iteration.zero?
+    move = best_moves.random
     @game_board.move(move.row, move.column) if !@observer.game_over?
   end
 
-  def check_position(row, column, path_value, iteration)
-    
+  def path_score(row, column, iteration)
+    @game_board.move(row, column)
+    path_value = make_move(iteration + 1)
+    @game_board.undo_move
+    return path_value
   end
 
-  def better_move?(best_value, path_value)
-    (best_value.nil?) or
-    (path_value >= best_value && @game_board.player_value == @self_value) or
-    (path_value <= best_value && @game_board.player_value != @self_value)
+  def for_each_cell
+    (0...@game_board.dimension).each do |row|
+      (0...@game_board.dimension).each do |column|
+        yield(row, column)
+      end
+    end
   end
 
   def first_move?
@@ -68,5 +65,32 @@ private
       move = Move.new(middle, middle)
     end
     @game_board.move(move.row, move.column)
+  end
+end
+
+class BestMove
+  attr_accessor :moves, :value
+  def initialize(game_board)
+    @moves = []
+    @value = nil
+    @game_board = game_board
+  end
+
+  def random
+    @moves[rand(@moves.size)]
+  end
+
+  def add_better_move(best_move, path_value, move, self_value)
+    if better_or_equal_move?(best_move, path_value, self_value)
+      @moves.clear if path_value !=  @value
+      @value = path_value
+      @moves << move
+    end
+  end
+
+  def better_or_equal_move?(best_value, path_value, self_value)
+    (best_value.nil?) or
+    (path_value >= best_value && @game_board.player_value == self_value) or
+    (path_value <= best_value && @game_board.player_value != self_value)
   end
 end
