@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
     "spec/minimax_computer_spec.rb",
     "spec/move_spec.rb",
     "spec/spec_helper.rb",
+    "swttt-gem.gemspec",
     "test/helper.rb",
     "test/test_swttt-gem.rb"
   ]
