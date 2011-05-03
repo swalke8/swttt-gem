@@ -12,14 +12,15 @@ describe MinimaxComputer do
 
  
   it "has a minimax player" do
-    @computer.nil?.should_not == true
+    @computer.nil?.should be_false
   end
 
- it "should print" do
-    (0...9).each do
-      @computer.make_move
-    end
-    @my_board.print
+  it "has a move" do
+    @computer.make_move.nil?.should be_false
+  end
+
+  it "always end in a cats game" do
+    (0...9).each { @computer.make_move }
     @observer.game_over?.should be_true
     @observer.has_winner?.should be_false
   end
