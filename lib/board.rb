@@ -68,6 +68,7 @@ end
 
 class Move
   attr_reader :row, :column, :player_value
+
   def initialize(row,column, player_value = 1)
     @row, @column, @player_value = row, column, player_value
   end

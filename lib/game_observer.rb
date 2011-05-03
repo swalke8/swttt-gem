@@ -28,6 +28,7 @@ private
   end
 
   def diagonal_win?
-    @game_board.left_diagonal.abs == @game_board.dimension || @game_board.right_diagonal.abs == @game_board.dimension
+    (@game_board.left_diagonal.abs == @game_board.dimension ||
+     @game_board.right_diagonal.abs == @game_board.dimension)
   end
 end
