@@ -1,5 +1,0 @@
-class HumanPlayer
-  def make_move
-    return nil
-  end
-end
