@@ -1,6 +1,6 @@
 = swttt-gem
 
-Description goes here.
+TTT Gem
 
 == Contributing to swttt-gem
  
