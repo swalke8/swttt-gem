@@ -41,12 +41,13 @@ class Board
 
   def print
     (0...@dimension).each { |row| print_row(row) }
+    puts "\n"
   end
 
 private
 
   def print_row(row)
-    puts ""
+    puts "\n"
     (0...@dimension).each { |column| print_square(row, column) }
   end
 
