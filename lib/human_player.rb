@@ -1,4 +1,4 @@
-require 'Board'
+require 'board'
 
 class HumanPlayer
   def initialize(board)
