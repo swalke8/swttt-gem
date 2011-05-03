@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Stephen Walker"]
   s.date = %q{2011-05-03}
-  s.description = %q{TODO: longer description of your gem}
+  s.description = %q{TTT Gem}
   s.email = %q{stephenwalker1988@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.6.2}
-  s.summary = %q{TODO: one-line summary of your gem}
+  s.summary = %q{SWTTT Gem}
   s.test_files = [
     "spec/board_spec.rb",
     "spec/game_observer_spec.rb",
