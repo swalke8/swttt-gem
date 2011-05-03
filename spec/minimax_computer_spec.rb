@@ -16,11 +16,11 @@ describe MinimaxComputer do
   end
 
   it "has a move" do
-    @computer.make_move.nil?.should be_false
+    @computer.move.nil?.should be_false
   end
 
   it "always end in a cats game" do
-    (0...9).each { @computer.make_move }
+    (0...9).each { @computer.move }
     @observer.game_over?.should be_true
     @observer.has_winner?.should be_false
   end

@@ -9,7 +9,7 @@ class MinimaxComputer
     @my_player_value = @game_board.player_value
   end
 
-  def make_move(iteration = 0)
+  def move(iteration = 0)
     if first_move?
       move = first_move
       return @game_board.move(move.row, move.column)
@@ -55,7 +55,7 @@ private
 
   def path_score(row, column, iteration)
     @game_board.move(row, column)
-    score = make_move(iteration + 1)
+    score = move(iteration + 1)
     @game_board.undo_move
     return score
   end
