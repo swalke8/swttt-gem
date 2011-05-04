@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{swttt-gem}
-  s.version = "0.5.0"
+  s.version = "0.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Stephen Walker"]
-  s.date = %q{2011-05-03}
+  s.date = %q{2011-05-04}
   s.description = %q{TTT Gem}
   s.email = %q{stephenwalker1988@gmail.com}
   s.extra_rdoc_files = [
