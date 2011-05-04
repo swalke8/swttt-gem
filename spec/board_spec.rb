@@ -97,33 +97,33 @@ describe Board do
       @my_board.move(1,1)
     end
 
-    it "should update sum of row" do
-      @my_board.sum_of_row[1].should == 1
+    it "should update row scores" do
+      @my_board.row_scores[1].should == 1
     end
 
-    it "should update sum of column" do
-      @my_board.sum_of_column[1].should == 1
+    it "should update column scores" do
+      @my_board.column_scores[1].should == 1
     end
 
-    it "should update the diagonals" do
-      @my_board.left_diagonal.should == 1
-      @my_board.right_diagonal.should == 1
+    it "should update the diagonal scores" do
+      @my_board.left_diagonal_score.should == 1
+      @my_board.right_diagonal_score.should == 1
     end
 
-    it "should undo sum of row" do
+    it "should undo row scores" do
       @my_board.undo_move
-      @my_board.sum_of_row[1].should == 0
+      @my_board.row_scores[1].should == 0
     end
 
-    it "should undo sum of column" do
+    it "should undo column scores" do
       @my_board.undo_move
-      @my_board.sum_of_column[1].should == 0
+      @my_board.column_scores[1].should == 0
     end
 
-    it "should undo diagonals" do
+    it "should undo diagonal scores" do
       @my_board.undo_move
-      @my_board.left_diagonal.should == 0
-      @my_board.right_diagonal.should == 0
+      @my_board.left_diagonal_score.should == 0
+      @my_board.right_diagonal_score.should == 0
     end
   end
 end

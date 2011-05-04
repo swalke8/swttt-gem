@@ -20,15 +20,15 @@ private
   end
 
   def horizontal_win?
-    loop_array { |row| @game_board.sum_of_row[row].abs }
+    loop_array { |row| @game_board.row_scores[row].abs }
   end
 
   def vertical_win?
-    loop_array { |column| @game_board.sum_of_column[column].abs }
+    loop_array { |column| @game_board.column_scores[column].abs }
   end
 
   def diagonal_win?
-    (@game_board.left_diagonal.abs == @game_board.dimension ||
-     @game_board.right_diagonal.abs == @game_board.dimension)
+    (@game_board.left_diagonal_score.abs == @game_board.dimension ||
+     @game_board.right_diagonal_score.abs == @game_board.dimension)
   end
 end

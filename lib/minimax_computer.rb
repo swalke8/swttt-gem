@@ -11,11 +11,12 @@ class MinimaxComputer
 
   def move(iteration = 0)
     if first_move?
-      move = first_move
-      return @game_board.move(move.row, move.column)
+      make_first_move
+    elsif @observer.game_over?
+      return path_score_result if iteration > 0
+    else
+      perform_mini_max(iteration)
     end
-    return path_score_result if @observer.game_over?
-    mini_max(iteration)
   end
 
 private
@@ -24,7 +25,12 @@ private
     @game_board.number_of_moves_made < 2
   end
 
-  def first_move
+  def make_first_move
+    move = select_first_move
+    @game_board.move(move.row, move.column)
+  end
+
+  def select_first_move
     if !@first_move.include?(@game_board.game_history.first)
       move = @first_move[rand(@first_move.size)]
     else
@@ -38,13 +44,13 @@ private
     return 0
   end
 
-  def mini_max(iteration)
+  def perform_mini_max(iteration)
     best_moves = BestMove.new(@game_board, @my_player_value)
     for_each_cell { |row, column| best_moves.add_better_move(best_moves.value, path_score(row, column,iteration),
                                   Move.new(row, column)) if @game_board.is_empty_at?(row, column) }
     return best_moves.value if !iteration.zero?
     move = best_moves.random
-    @game_board.move(move.row, move.column) if !@observer.game_over?
+    @game_board.move(move.row, move.column)
   end
 
    def for_each_cell

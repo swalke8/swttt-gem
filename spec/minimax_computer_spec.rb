@@ -24,4 +24,14 @@ describe MinimaxComputer do
     @observer.game_over?.should be_true
     @observer.has_winner?.should be_false
   end
+
+  it "takes an immediate win" do
+    @my_board.move(1,0)
+    @my_board.move(2,2)
+    @my_board.move(1,1)
+    @my_board.move(1,2)
+    @my_board.move(0,0)
+    @computer.move
+    @observer.has_winner?.should be_true
+  end
 end

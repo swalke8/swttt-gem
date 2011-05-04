@@ -1,12 +1,12 @@
 class Board
   attr_reader :game_history, :dimension, :game_board, :player_value, :board,
-              :sum_of_row, :sum_of_column, :left_diagonal, :right_diagonal
+              :row_scores, :column_scores, :left_diagonal_score, :right_diagonal_score
 
   def initialize(dimension = 3)
     @dimension = dimension
     @game_history, @board = [], [[0,0,0],[0,0,0],[0,0,0]]
-    @sum_of_row, @sum_of_column = [0,0,0], [0,0,0]
-    @left_diagonal, @right_diagonal = 0, 0
+    @row_scores, @column_scores = [0,0,0], [0,0,0]
+    @left_diagonal_score, @right_diagonal_score = 0, 0
   end
 
   def move(row, column, value = nil)
@@ -60,10 +60,10 @@ private
   end
 
   def update_sums(row, column, update_value)
-    @sum_of_row[row] += update_value
-    @sum_of_column[column] += update_value
-    @left_diagonal += update_value if row == column
-    @right_diagonal += update_value if row == @dimension - column - 1
+    @row_scores[row] += update_value
+    @column_scores[column] += update_value
+    @left_diagonal_score += update_value if row == column
+    @right_diagonal_score += update_value if row == @dimension - column - 1
   end
 end
 
