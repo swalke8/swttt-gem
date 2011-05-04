@@ -12,8 +12,6 @@ class MinimaxComputer
   def move(iteration = 0)
     if first_move?
       make_first_move
-    elsif @observer.game_over?
-      return path_score_result if iteration > 0
     else
       perform_mini_max(iteration)
     end
@@ -39,14 +37,10 @@ private
     end
   end
 
-  def path_score_result
-    return -@game_board.player_value if @observer.has_winner?
-    return 0
-  end
-
   def perform_mini_max(iteration)
+    return path_score if @observer.game_over?
     best_moves = BestMove.new(@game_board, @my_player_value)
-    for_each_cell { |row, column| best_moves.add_better_move(best_moves.value, path_score(row, column,iteration),
+    for_each_cell { |row, column| best_moves.add_better_move(best_moves.value, calculate_path_score(row, column,iteration),
                                   Move.new(row, column)) if @game_board.is_empty_at?(row, column) }
     return best_moves.value if !iteration.zero?
     move = best_moves.random
@@ -59,13 +53,34 @@ private
     end
   end
 
-  def path_score(row, column, iteration)
+  def path_score
+    return -@game_board.player_value if @observer.has_winner?
+    return 0
+  end
+
+  def calculate_path_score(row, column, iteration)
     @game_board.move(row, column)
-    score = move(iteration + 1)
+    score = calculate_score(iteration)
     @game_board.undo_move
     return score
   end
- end
+
+  def calculate_score(iteration)
+    if immediate_win?(iteration)
+      return infinity
+    else
+      return perform_mini_max(iteration + 1)
+    end
+  end
+
+  def immediate_win?(iteration)
+    iteration.zero? && @observer.has_winner?
+  end
+
+  def infinity
+    -@game_board.player_value * 1.0/0.0
+  end
+end
 
 class BestMove
   attr_accessor :moves, :value

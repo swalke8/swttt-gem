@@ -33,5 +33,6 @@ describe MinimaxComputer do
     @my_board.move(0,0)
     @computer.move
     @observer.has_winner?.should be_true
+    @my_board.number_of_moves_made.should == 6
   end
 end
