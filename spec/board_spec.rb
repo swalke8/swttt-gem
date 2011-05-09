@@ -6,9 +6,9 @@ describe Board do
     @my_board = Board.new
   end
 
-  def double_loop
-    (0...@my_board.dimension).each do |row|
-      (0...@my_board.dimension).each do |column| 
+  def iterate_board
+    (0..@my_board.dimension).each do |row|
+      (0..@my_board.dimension).each do |column| 
         yield(row, column)
       end
     end
@@ -19,7 +19,7 @@ describe Board do
   end
 
   it "should check for a full board" do
-    double_loop { |row, column| @my_board.move(row, column) }
+    iterate_board { |row, column| @my_board.move(row, column) }
     @my_board.full?.should == true
   end
 

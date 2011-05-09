@@ -14,21 +14,25 @@ class GameObserver
 
 private
 
-  def loop_array
-    (0...@game_board.dimension).each { |index| return true if yield(index) == @game_board.dimension }
-    false
-  end
-
   def horizontal_win?
-    loop_array { |row| @game_board.row_scores[row].abs }
+    check_for_winner { |row| @game_board.row_scores[row].abs }
   end
 
   def vertical_win?
-    loop_array { |column| @game_board.column_scores[column].abs }
+    check_for_winner { |column| @game_board.column_scores[column].abs }
   end
 
   def diagonal_win?
-    (@game_board.left_diagonal_score.abs == @game_board.dimension ||
-     @game_board.right_diagonal_score.abs == @game_board.dimension)
+    (is_a_win?(@game_board.left_diagonal_score.abs) ||
+     is_a_win?(@game_board.right_diagonal_score.abs))
+  end
+
+  def check_for_winner
+    (0..@game_board.dimension).each { |index| return true if is_a_win?(yield(index)) }
+    false
+  end
+
+  def is_a_win?(value)
+    value == @game_board.dimension+1
   end
 end

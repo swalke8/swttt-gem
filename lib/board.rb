@@ -1,11 +1,11 @@
 class Board
-  attr_reader :game_history, :dimension, :game_board, :player_value, :board,
-              :row_scores, :column_scores, :left_diagonal_score, :right_diagonal_score
+  attr_reader :game_history, :game_board, :player_value, :board, :row_scores,
+              :column_scores, :left_diagonal_score, :right_diagonal_score
 
   def initialize(dimension = 3)
     @dimension = dimension
-    @game_history, @board = [], [[0,0,0],[0,0,0],[0,0,0]]
-    @row_scores, @column_scores = [0,0,0], [0,0,0]
+    @game_history, @board = [], Array.new(@dimension) {Array.new(@dimension) {0}}
+    @row_scores, @column_scores = Array.new(@dimension) {0}, Array.new(@dimension) {0}
     @left_diagonal_score, @right_diagonal_score = 0, 0
   end
 
@@ -33,6 +33,10 @@ class Board
     @game_history.size == @dimension*@dimension
   end
 
+  def dimension
+    @dimension-1
+  end
+
   def player_value
     value = -(number_of_moves_made % 2)
     value = 1 if value.zero?
@@ -40,7 +44,7 @@ class Board
   end
 
   def print
-    (0...@dimension).each { |row| print_row(row) }
+    (0..@dimension).each { |row| print_row(row) }
     puts "\n"
   end
 
@@ -48,7 +52,7 @@ private
 
   def print_row(row)
     puts "\n"
-    (0...@dimension).each { |column| print_square(row, column) }
+    (0..@dimension).each { |column| print_square(row, column) }
   end
 
   def print_square(row, column)
@@ -63,7 +67,7 @@ private
     @row_scores[row] += update_value
     @column_scores[column] += update_value
     @left_diagonal_score += update_value if row == column
-    @right_diagonal_score += update_value if row == @dimension - column - 1
+    @right_diagonal_score += update_value if row == dimension - column
   end
 end
 

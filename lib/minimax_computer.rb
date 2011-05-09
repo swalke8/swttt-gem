@@ -3,9 +3,9 @@ class MinimaxComputer
   def initialize(board, observer)
     @game_board, @observer = board, observer
     @first_move = [Move.new(0,0),
-                   Move.new(0,@game_board.dimension-1),
-                   Move.new(@game_board.dimension-1,0),
-                   Move.new(@game_board.dimension-1, @game_board.dimension-1)]
+                   Move.new(0,@game_board.dimension),
+                   Move.new(@game_board.dimension,0),
+                   Move.new(@game_board.dimension, @game_board.dimension)]
     @my_player_value = @game_board.player_value
   end
 
@@ -29,12 +29,21 @@ private
   end
 
   def select_first_move
-    if !@first_move.include?(@game_board.game_history.first)
-      move = @first_move[rand(@first_move.size)]
-    else
-      middle = @game_board.dimension/2
-      move = Move.new(middle, middle)
-    end
+    return corner_move if all_board_corners_open?
+    return middle_move
+  end
+
+  def all_board_corners_open?
+    !@first_move.include?(@game_board.game_history.first)
+  end
+
+  def corner_move
+    @first_move[rand(@first_move.size)]
+  end
+
+  def middle_move
+    middle = @game_board.dimension/2
+    return move = Move.new(middle, middle)
   end
 
   def perform_mini_max(iteration)
@@ -43,13 +52,13 @@ private
     for_each_cell { |row, column| best_moves.add_better_move(best_moves.value, calculate_path_score(row, column,iteration),
                                   Move.new(row, column)) if @game_board.is_empty_at?(row, column) }
     return best_moves.value if !iteration.zero?
-    move = best_moves.random
+    move = best_moves.get_random_move
     @game_board.move(move.row, move.column)
   end
 
    def for_each_cell
-    (0...@game_board.dimension).each do |row|
-      (0...@game_board.dimension).each { |column| yield(row, column) }
+    (0..@game_board.dimension).each do |row|
+      (0..@game_board.dimension).each { |column| yield(row, column) }
     end
   end
 
@@ -90,7 +99,7 @@ class BestMove
     @game_board, @my_player_value = game_board, my_player_value
   end
 
-  def random
+  def get_random_move
     @moves[rand(@moves.size)]
   end
 
