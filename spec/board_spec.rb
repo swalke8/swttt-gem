@@ -15,12 +15,12 @@ describe Board do
   end
 
   it "should create a board" do
-    @my_board.nil?.should == false
+    @my_board.nil?.should be_false
   end
 
   it "should check for a full board" do
     iterate_board { |row, column| @my_board.move(row, column) }
-    @my_board.full?.should == true
+    @my_board.full?.should be_true
   end
 
   context "game history" do
