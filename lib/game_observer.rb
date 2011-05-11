@@ -28,11 +28,11 @@ private
   end
 
   def check_for_winner
-    (0..@game_board.dimension).each { |index| return true if is_a_win?(yield(index)) }
-    false
+    (0...@game_board.dimension).each { |index| return true if is_a_win?(yield(index)) }
+    return false
   end
 
   def is_a_win?(value)
-    value == @game_board.dimension+1
+    value == @game_board.winning_value
   end
 end

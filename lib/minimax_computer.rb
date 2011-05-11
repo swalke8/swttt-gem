@@ -2,10 +2,6 @@ class MinimaxComputer
 
   def initialize(board, observer)
     @game_board, @observer = board, observer
-    @first_move = [Move.new(0,0),
-                   Move.new(0,@game_board.dimension),
-                   Move.new(@game_board.dimension,0),
-                   Move.new(@game_board.dimension, @game_board.dimension)]
     @my_player_value = @game_board.player_value
   end
 
@@ -28,17 +24,19 @@ private
     @game_board.move(move.row, move.column)
   end
 
+  def perform_mini_max(iteration)
+    return path_score if @observer.game_over?
+    best_moves = BestMove.new(@game_board, @my_player_value)
+    for_each_cell { |row, column| best_moves.add_better_move(calculate_path_score(row, column,iteration),
+                                  Move.new(row, column)) if @game_board.is_empty_at?(row, column) }
+    return best_moves.value if !iteration.zero?
+    move = best_moves.get_random_move
+    @game_board.move(move.row, move.column)
+  end
+
   def select_first_move
-    return corner_move if all_board_corners_open?
+    return @game_board.random_corner_cell if !@game_board.corner_occupied?
     return middle_move
-  end
-
-  def all_board_corners_open?
-    !@first_move.include?(@game_board.game_history.first)
-  end
-
-  def corner_move
-    @first_move[rand(@first_move.size)]
   end
 
   def middle_move
@@ -46,19 +44,9 @@ private
     return move = Move.new(middle, middle)
   end
 
-  def perform_mini_max(iteration)
-    return path_score if @observer.game_over?
-    best_moves = BestMove.new(@game_board, @my_player_value)
-    for_each_cell { |row, column| best_moves.add_better_move(best_moves.value, calculate_path_score(row, column,iteration),
-                                  Move.new(row, column)) if @game_board.is_empty_at?(row, column) }
-    return best_moves.value if !iteration.zero?
-    move = best_moves.get_random_move
-    @game_board.move(move.row, move.column)
-  end
-
-   def for_each_cell
-    (0..@game_board.dimension).each do |row|
-      (0..@game_board.dimension).each { |column| yield(row, column) }
+  def for_each_cell
+    (0...@game_board.dimension).each do |row|
+      (0...@game_board.dimension).each { |column| yield(row, column) }
     end
   end
 
@@ -103,16 +91,16 @@ class BestMove
     @moves[rand(@moves.size)]
   end
 
-  def add_better_move(best_score, path_score, move)
-    if better_or_equal_move?(best_score, path_score)
+  def add_better_move(path_score, move)
+    if better_or_equal_move?(path_score)
       @moves.clear and @value = path_score if path_score !=  @value
       @moves << move
     end
   end
 
-  def better_or_equal_move?(best_score, path_score)
-    (best_score.nil?) or
-    (path_score >= best_score && @game_board.player_value == @my_player_value) or
-    (path_score <= best_score && @game_board.player_value != @my_player_value)
+  def better_or_equal_move?(path_score)
+    (@value.nil?) or
+    (path_score >= @value && @game_board.player_value == @my_player_value) or
+    (path_score <= @value && @game_board.player_value != @my_player_value)
   end
 end

@@ -1,5 +1,5 @@
 class Board
-  attr_reader :game_history, :game_board, :player_value, :board, :row_scores,
+  attr_reader :game_history, :player_value, :row_scores, :dimension,
               :column_scores, :left_diagonal_score, :right_diagonal_score
 
   def initialize(dimension = 3)
@@ -25,6 +25,10 @@ class Board
     @game_history.size
   end
 
+  def value_at(row, column)
+    @board[row][column]
+  end
+
   def is_empty_at?(row, column)
     @board[row][column].zero?
   end
@@ -33,8 +37,8 @@ class Board
     @game_history.size == @dimension*@dimension
   end
 
-  def dimension
-    @dimension-1
+  def winning_value
+    @dimension
   end
 
   def player_value
@@ -43,31 +47,29 @@ class Board
     return value
   end
 
-  def print
-    (0...@dimension).each { |row| print_row(row) }
-    puts "\n"
+  def corner_occupied?
+    corner_cells.each { |corner| return true if @game_history.include?(corner) }
+    return false
+  end
+
+  def random_corner_cell
+    corner_cells[rand(corner_cells.size)]
   end
 
 private
 
-  def print_row(row)
-    puts "\n"
-    (0...@dimension).each { |column| print_square(row, column) }
-  end
-
-  def print_square(row, column)
-    putc "["
-    putc "X" if @board[row][column] == 1
-    putc"O" if @board[row][column] == -1
-    putc " " if @board[row][column].zero?
-    putc "]"
+  def corner_cells
+    [Move.new(0,0),
+     Move.new(0,@dimension-1),
+     Move.new(@dimension-1,0),
+     Move.new(@dimension-1, @dimension-1)]
   end
 
   def update_sums(row, column, update_value)
     @row_scores[row] += update_value
     @column_scores[column] += update_value
     @left_diagonal_score += update_value if row == column
-    @right_diagonal_score += update_value if row == dimension - column
+    @right_diagonal_score += update_value if row == dimension - column - 1
   end
 end
 
