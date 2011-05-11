@@ -7,8 +7,8 @@ describe Board do
   end
 
   def iterate_board
-    (0...@my_board.dimension).each do |row|
-      (0...@my_board.dimension).each do |column| 
+    (1..@my_board.dimension).each do |row|
+      (1..@my_board.dimension).each do |column| 
         yield(row, column)
       end
     end
@@ -71,13 +71,13 @@ describe Board do
 
   it "can override the player_value" do
     @my_board.move(1,2,1)
-    @my_board.move(0,0,1)
+    @my_board.move(2,2,1)
     @my_board.player_value.should == 1
   end
 
   it "updates the board when move is called" do
-    @my_board.move(0,0)
-    @my_board.value_at(0,0).should == 1
+    @my_board.move(2,2)
+    @my_board.value_at(2,2).should == 1
   end
 
   it "undos the board" do
@@ -89,7 +89,7 @@ describe Board do
   context "sum values" do
 
     before do
-      @my_board.move(1,1)
+      @my_board.move(2,2)
     end
 
     it "should update row scores" do
@@ -128,16 +128,16 @@ describe Board do
 
   it "detects if a corner cell is occupied" do
     @my_board.corner_occupied?.should be_false
-    @my_board.move(0,0)
+    @my_board.move(1,1)
     @my_board.corner_occupied?.should be_true
     @my_board.undo_move
-    @my_board.move(0,2)
+    @my_board.move(1,3)
     @my_board.corner_occupied?.should be_true
     @my_board.undo_move
-    @my_board.move(2,0)
+    @my_board.move(3,1)
     @my_board.corner_occupied?.should be_true
     @my_board.undo_move
-    @my_board.move(2,2)
+    @my_board.move(3,3)
     @my_board.corner_occupied?.should be_true
   end
 

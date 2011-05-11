@@ -1,5 +1,5 @@
 class Board
-  attr_reader :game_history, :player_value, :row_scores, :dimension,
+  attr_reader :game_history, :player_value, :row_scores, :dimension, :player_one, :player_two,
               :column_scores, :left_diagonal_score, :right_diagonal_score
 
   def initialize(dimension = 3)
@@ -7,18 +7,19 @@ class Board
     @game_history, @board = [], Array.new(@dimension) {Array.new(@dimension) {0}}
     @row_scores, @column_scores = Array.new(@dimension) {0}, Array.new(@dimension) {0}
     @left_diagonal_score, @right_diagonal_score = 0, 0
+    @player_one, @player_two = 1, -1
   end
 
   def move(row, column, value = nil)
-    @board[row][column] = value || player_value
-    update_sums(row, column, value || player_value)
+    @board[row-1][column-1] = value || player_value
+    update_sums(row-1, column-1, value || player_value)
     @game_history << Move.new(row, column, value || player_value)
   end
 
   def undo_move
     move = @game_history.pop
-    update_sums(move.row, move.column, -player_value)
-    @board[move.row][move.column] = 0
+    update_sums(move.row-1, move.column-1, -player_value)
+    @board[move.row-1][move.column-1] = 0
   end
 
   def number_of_moves_made
@@ -26,11 +27,11 @@ class Board
   end
 
   def value_at(row, column)
-    @board[row][column]
+    @board[row-1][column-1]
   end
 
   def is_empty_at?(row, column)
-    @board[row][column].zero?
+    @board[row-1][column-1].zero?
   end
 
   def full?
@@ -47,6 +48,10 @@ class Board
     return value
   end
 
+  def winner
+    -player_value
+  end
+
   def corner_occupied?
     corner_cells.each { |corner| return true if @game_history.include?(corner) }
     return false
@@ -59,17 +64,17 @@ class Board
 private
 
   def corner_cells
-    [Move.new(0,0),
-     Move.new(0,@dimension-1),
-     Move.new(@dimension-1,0),
-     Move.new(@dimension-1, @dimension-1)]
+    [Move.new(1,1),
+     Move.new(1,@dimension),
+     Move.new(@dimension,1),
+     Move.new(@dimension, @dimension)]
   end
 
   def update_sums(row, column, update_value)
     @row_scores[row] += update_value
     @column_scores[column] += update_value
     @left_diagonal_score += update_value if row == column
-    @right_diagonal_score += update_value if row == dimension - column - 1
+    @right_diagonal_score += update_value if row == @dimension - column - 1
   end
 end
 

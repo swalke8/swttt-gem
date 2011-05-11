@@ -40,13 +40,13 @@ private
   end
 
   def middle_move
-    middle = @game_board.dimension/2
+    middle = @game_board.dimension/2 + 1
     return move = Move.new(middle, middle)
   end
 
   def for_each_cell
-    (0...@game_board.dimension).each do |row|
-      (0...@game_board.dimension).each { |column| yield(row, column) }
+    (1..@game_board.dimension).each do |row|
+      (1..@game_board.dimension).each { |column| yield(row, column) }
     end
   end
 
