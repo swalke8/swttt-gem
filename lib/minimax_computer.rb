@@ -35,9 +35,8 @@ private
   end
 
   def select_first_move
-    if @game_board.number_of_moves_made.zero? ||
-       @game_board.game_history[0] == middle_move
-      return @game_board.random_corner_cell if @game_board.number_of_moves_made.zero?
+    if @game_board.number_of_moves_made.zero? || @game_board.game_history[0] == middle_move
+      return @game_board.random_corner_cell
     else
       return middle_move
     end

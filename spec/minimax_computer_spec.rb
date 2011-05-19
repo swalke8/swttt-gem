@@ -39,8 +39,7 @@ describe MinimaxComputer do
   it "takes a corner or middle piece for first move" do
     @my_board.move(2,3)
     @computer.move
-    [Move.new(1,1), Move.new(1,3), Move.new(3,1),
-     Move.new(3,3)].include?(@my_board.game_history.last).should be_true
+    [Move.new(1,1), Move.new(1,3), Move.new(3,1), Move.new(3,3), Move.new(2,2)].include?(@my_board.game_history.last).should be_true
   end
 
   it "blocks immediate losses" do
