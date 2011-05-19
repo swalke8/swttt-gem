@@ -35,7 +35,7 @@ private
   end
 
   def select_first_move
-    return @game_board.random_corner_cell if !@game_board.corner_occupied?
+    return @game_board.random_corner_cell if !@game_board.number_of_moves_made.zero?
     return middle_move
   end
 
