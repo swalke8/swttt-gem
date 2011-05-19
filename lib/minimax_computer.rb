@@ -63,15 +63,15 @@ private
   end
 
   def calculate_score(iteration)
-    if immediate_win?(iteration)
+    if immediate_win_or_loss?(iteration)
       return infinity
     else
       return perform_mini_max(iteration + 1)
     end
   end
 
-  def immediate_win?(iteration)
-    iteration.zero? && @observer.has_winner?
+  def immediate_win_or_loss?(iteration)
+    iteration<2 && @observer.has_winner?
   end
 
   def infinity

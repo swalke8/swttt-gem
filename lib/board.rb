@@ -18,7 +18,7 @@ class Board
 
   def undo_move
     move = @game_history.pop
-    update_sums(move.row-1, move.column-1, -player_value)
+    update_sums(move.row-1, move.column-1, -move.player_value)
     @board[move.row-1][move.column-1] = 0
   end
 

@@ -26,13 +26,28 @@ describe MinimaxComputer do
   end
 
   it "takes an immediate win" do
-    @my_board.move(1,0)
+    @my_board.move(2,1)
+    @my_board.move(3,3)
     @my_board.move(2,2)
+    @my_board.move(2,3)
     @my_board.move(1,1)
-    @my_board.move(1,2)
-    @my_board.move(0,0)
     @computer.move
     @observer.has_winner?.should be_true
     @my_board.number_of_moves_made.should == 6
+  end
+
+  it "takes a corner or middle piece for first move" do
+    @my_board.move(2,3)
+    @computer.move
+    [Move.new(1,1), Move.new(1,3), Move.new(3,1),
+     Move.new(3,3)].include?(@my_board.game_history.last).should be_true
+  end
+
+  it "blocks immediate losses" do
+    @my_board.move(2,3)
+    @computer.move
+    @my_board.move(1,3)
+    @computer.move
+    @my_board.value_at(3,3).should == -1
   end
 end
